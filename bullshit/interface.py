@@ -2,13 +2,14 @@ import tkinter
 from PIL import Image, ImageTk
 from .bullshit import Bullshit
 import os
+import pkg_resources
 
 class Interface:
     def __init__(self,player):
         self.player = player
         self.dice_pngs = dict()
         for dice_number in range(1,7):
-            self.dice_pngs[dice_number] = os.path.join('dices',str(dice_number)+'.png')
+            self.dice_pngs[dice_number] = pkg_resources.resource_filename('bullshit', os.path.join('dices',str(dice_number)+'.png'))
 
         self.root = tkinter.Tk()
         self.root.geometry(str(150*self.player.n_dices_per_player)+'x150')
