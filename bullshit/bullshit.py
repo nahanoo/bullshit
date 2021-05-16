@@ -2,6 +2,11 @@ import random
 
 class Bullshit:
     """Bullshti dice game engine"""
+    def __init__(self):
+        self.running = None
+        self.players = dict()
+
+   
     class Player:
         """A player which has dices, an guess and some helper functions"""
         def __init__(self,name,n_dices_per_player):
@@ -14,6 +19,9 @@ class Bullshit:
             class Dice:
                 def __init__(self):
                     self.dice_number = None
+            
+            # Player is still in round
+            self.participates = None
 
             # Name of a player and dices of a person
             self.name = name
@@ -42,13 +50,16 @@ class Bullshit:
             self.guess.dice_number = int(dice_number)
             self.guess.dice_count = int(dice_count)
 
+    
+    class Round():
+        def __init__(self):
+            self.round = self.Players
+
     def create_players(self,n_players,n_dices_per_player):
         """Create muliplte players with n dices per player"""
-        players = dict()
         for n in range(n_players):
             name = 'player_'+str(n)
-            players[name] = self.Player(name,n_dices_per_player)
-        return players
+            self.players[name] = self.Player(name,n_dices_per_player)
 
 
     def check_bullshit(self,players,guesser):
@@ -62,3 +73,5 @@ class Bullshit:
             return False
         else:
             return True
+
+

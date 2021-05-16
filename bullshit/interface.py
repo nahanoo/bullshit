@@ -5,19 +5,17 @@ import os
 import pkg_resources
 
 class Interface:
-    def __init__(self,player):
-        self.player = player
+    def __init__(self):
         self.dice_pngs = dict()
         for dice_number in range(1,7):
             self.dice_pngs[dice_number] = pkg_resources.resource_filename('bullshit', os.path.join('dices',str(dice_number)+'.png'))
 
+    def show_dices(self,player):
         self.root = tkinter.Tk()
-        self.root.geometry(str(150*self.player.n_dices_per_player)+'x150')
-        self.root.title('Dices of '+self.player.name)
-
-    def show_dices(self):
+        self.root.geometry(str(150*player.n_dices_per_player)+'x150')
+        self.root.title('Dices of '+player.name)
         dice_images = []
-        for dice in self.player.dices.values():
+        for dice in player.dices.values():
             dice_image = ImageTk.PhotoImage(Image.open(self.dice_pngs[dice.dice_number]))
             dice_images.append(dice_image)
 
