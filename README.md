@@ -31,8 +31,4 @@ Remember that the dice number one counts as four as well.
 The next player has to increase either the dice number or the dice count.  
 So one possible game move of the next player would be that he guesses three fives or sixes. Another possible game move would be to guess that there are four dices with the dice number of choice (e.g four twos).  
 You can also increase by more than one.
-Another option for a valid game move is to call bullshit. You can call bullshit when you think that the guess of the previous player is wrong. If you are correct and the guess was bullshit, the previous player looses a dice. If the guess of the previous player was correct, you loose a dice. If you don't have any dices anymore, you are out!
-
-## Known flaws
-
-The looser of the previous round would be the beginner of the next round. This is not implemented yet and the order of the players stays the same.
+Another option for a valid game move is to call bullshit. You can call bullshit when you think that the guess of the previous player is wrong. If you are correct and the guess was bullshit, the previous player looses a dice. If the guess of the previous player was correct, you loose a dice. If you don't have any dices anymore, you are out! The player who lost the dice, starts the next round. If it was his last dice and he is out, the next player starts. This logic was not particularly hard to implement but not easy to code pretty. 
