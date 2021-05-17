@@ -3,7 +3,7 @@ import random
 class Bullshit:
     """Bullshti dice game engine"""
     def __init__(self):
-        self.running = None
+        self.running = False
         self.players = dict()
         self.game_round = None
         self.active_players = 0
@@ -11,7 +11,7 @@ class Bullshit:
     class Player:
         """A player which has dices, an guess and some helper functions"""
         class Guess:
-                """Guess of a player about dice numbers and dice counts of a rond"""
+                """Guess of a player about dice numbers and dice counts of a round"""
                 def __init__(self):
                     self.dice_number = None
                     self.dice_count = None
@@ -48,7 +48,7 @@ class Bullshit:
 
     
     class Round():
-        def __init__(self,players):
+        def __init__(self):
             self.running = None
             self.player_order = []
 
@@ -70,3 +70,16 @@ class Bullshit:
             return False
         else:
             return True
+
+    def change_player_order(self,looser):
+        names = list(self.players.keys())
+        reordered_names = []
+        looser_index = names.index(looser)
+        for i in range(looser_index,len(names)):
+            reordered_names.append(names[i])
+        for i in range(looser_index):
+            reordered_names.append(names[i])
+        previous_player_order = self.players
+        self.players = dict()
+        for name in reordered_names:
+            self.players[name] = previous_player_order[name]
