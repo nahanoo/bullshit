@@ -5,23 +5,24 @@ class Bullshit:
     def __init__(self):
         self.running = None
         self.players = dict()
-
+        self.game_round = None
+        self.active_players = 0
    
     class Player:
         """A player which has dices, an guess and some helper functions"""
-        def __init__(self,name,n_dices_per_player):
-            class Guess:
+        class Guess:
                 """Guess of a player about dice numbers and dice counts of a rond"""
                 def __init__(self):
                     self.dice_number = None
                     self.dice_count = None
 
-            class Dice:
-                def __init__(self):
-                    self.dice_number = None
+        class Dice:
+            def __init__(self):
+                self.dice_number = None
+        def __init__(self,name,n_dices_per_player):
             
             # Player is still in round
-            self.participates = None
+            self.participates = True
 
             # Name of a player and dices of a person
             self.name = name
@@ -30,10 +31,10 @@ class Bullshit:
             # Create dices of a player
             self.dices = dict()
             for n in range(self.n_dices_per_player):
-                self.dices[n] = Dice()
+                self.dices[n] = self.Dice()
 
             # Create guess object
-            self.guess = Guess()
+            self.guess = self.Guess()
 
         def roll_dices(self):
             """Roll the dices of a player"""
@@ -45,15 +46,11 @@ class Bullshit:
             dices = [str(v.dice_number) for v in list(self.dices.values())]
             print(''.join(['|','|'.join(dices),'|']))
 
-        def set_guess(self,dice_number,dice_count):
-            """Set guess of a player"""
-            self.guess.dice_number = int(dice_number)
-            self.guess.dice_count = int(dice_count)
-
     
     class Round():
-        def __init__(self):
-            self.round = self.Players
+        def __init__(self,players):
+            self.running = None
+            self.player_order = []
 
     def create_players(self,n_players,n_dices_per_player):
         """Create muliplte players with n dices per player"""
@@ -73,5 +70,3 @@ class Bullshit:
             return False
         else:
             return True
-
-

@@ -1,6 +1,6 @@
 import tkinter
 from PIL import Image, ImageTk
-from .bullshit import Bullshit
+from bullshit import Bullshit
 import os
 import pkg_resources
 
