@@ -91,4 +91,3 @@ def main(n_players,n_dices_per_person):
                 if player.participates:
                     print('Congratulations '+player.name+', you won.')
                     game.running = False
-    return game
