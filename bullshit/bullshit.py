@@ -7,6 +7,7 @@ class Bullshit:
         self.players = dict()
         self.game_round = None
         self.active_players = 0
+        self.bot = False
    
     class Player:
         """A player which has dices, an guess and some helper functions"""
