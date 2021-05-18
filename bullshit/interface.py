@@ -1,6 +1,5 @@
 import tkinter
 from PIL import Image, ImageTk
-from bullshit import Bullshit
 import os
 import pkg_resources
 
@@ -16,7 +15,7 @@ class Interface:
         self.root.title('Dices of '+player.name)
         dice_images = []
         for dice in player.dices.values():
-            dice_image = ImageTk.PhotoImage(Image.open(self.dice_pngs[dice.dice_number]))
+            dice_image = ImageTk.PhotoImage(Image.open(self.dice_pngs[dice]))
             dice_images.append(dice_image)
 
         labels = []
