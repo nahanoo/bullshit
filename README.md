@@ -26,7 +26,7 @@ m.main(4,2) # this will create a game wit 4 players with 2 dices per player
 
 One player has to start and make a guess how many dices of a dice number are present in the entire round.
 The dice number one is a joker and counts as any dice number.  
-For example the beginner would estimate that there are three fours in the entire round.
+For example the beginner would say that he estimates that there are three fours in the entire round.
 Remember that the dice number one counts as four as well.  
 The next player has to increase either the dice number or the dice count.  
 So one possible game move of the next player would be to guess three fives or sixes. Another possible game move would be to guess that there are four dices with the dice number of choice (e.g four twos).  
