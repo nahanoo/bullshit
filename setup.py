@@ -9,5 +9,5 @@ setup(name='bullshit',
       install_requires=['pillow>=8.0.1',
                         'names>=0.3.0'],
       include_package_data=True,
-      package_data={'':['dices/*.png']}
+      package_data={'':['dices/*.png','rules.txt']}
      )

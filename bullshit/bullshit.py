@@ -1,5 +1,7 @@
 import random
 from bullshit import Interface
+import pkg_resources
+
 
 class Bullshit:
     """This class is used to control the game status."""
@@ -86,24 +88,14 @@ class Player:
         dices = [str(dice) for dice in self.dices.values()]
         print(''.join(['|','|'.join(dices),'|']))
 
-    def get_guess(self):
-        """This functions parses the number of the dice
-        and the estimate n_count of the dice in the entire round.
+    def get_dice_number(self):
+        """This functions parses the number of the dices.
         """
-        def get_dice_number(self):
-            # get dice number
-            dice_number = input('Which dice number do you pick to make a guess?\n')
-            return dice_number
-
-        def get_dice_count(self):
-            # get dice count
-            dice_count = input('How many '+str(self.guess_dice_number)+'s do you estimate are in this round?\n')
-            return dice_count
-
+        # get dice number
         valid_dice_number = False
         # used to ensure that guesses are integers
         while valid_dice_number is False:
-            dice_number = get_dice_number(self)
+            dice_number = input('Which dice number do you pick to make a guess?\n')
             try:
                 # checks if guess is valid
                 int(dice_number)
@@ -112,11 +104,12 @@ class Player:
             except ValueError:
                 # if int(guess) fails, guess is not a number.
                 print('You did not enter a number. Only numbers are allowed.')
-                pass
-        
+            
+    def get_dice_count(self):
+        # get dice count
         valid_dice_count = False
         while valid_dice_count is False:
-            dice_count = get_dice_count(self)
+            dice_count = input('How many '+str(self.guess_dice_number)+'s do you estimate are in this round?\n')
             try:
                 int(dice_count)
                 self.guess_dice_count = int(dice_count)
@@ -125,10 +118,26 @@ class Player:
                 print('You did not enter a number. Only numbers are allowed.')
                 pass
 
-    def check_guess(self,previous_player):
-        # to be implemented
-        pass
-
+    def correct_guess(self,previous_player):
+        if self.guess_dice_number > previous_player.guess_dice_number:
+            True
+        if self.guess_dice_count > previous_player.guess_dice_count:
+            True
+        else:
+            valid_decision = False
+            while valid_decision is False:
+                print('This was not a valid guess. Previous player guessed '+
+                str(previous_player.guess_dice_count)+' '+str(previous_player.guess_dice_number)+'s.')
+                move = input('Press r to show rules, g to make a guess.\n')
+                if move == 'r':
+                    with open(pkg_resources.resource_filename('bullshit','rules.txt'),'r') as handle:
+                        rules = handle.read()
+                        print('\n'+rules+'\n')
+                    valid_decision = True
+                if move == 'g':
+                    valid_decision = True
+            return False
+        
     def make_game_move(self,game,game_round,players):
         """This functions is used to get a decision of a real player.
         Options are to show dices (should remain secret), to make a valid guess,
@@ -146,7 +155,16 @@ class Player:
                 interface.show_dices(self)
             if decision == 'g':
                 # guess is made
-                self.get_guess()  
+                valid_guess = False
+                while valid_guess is False:
+                    if game_round.moves >= 1:
+                        self.get_dice_number()
+                        self.get_dice_count()
+                        valid_guess = self.correct_guess(players[previous_player])
+                    else:
+                        self.get_dice_number()
+                        self.get_dice_count()
+                        valid_guess = True
                 valid_decision = True
             if decision == 'b':
                 # bullshit is called and checked. This terminates the round.
