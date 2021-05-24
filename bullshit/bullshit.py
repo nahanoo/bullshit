@@ -10,17 +10,11 @@ class Bullshit:
         self.active_players = 0
         self.bot = False
 
-    def create_players(self,n_players,n_dices_per_player):
-        """A function of the game to create and return
-        a dictionary of the Player class.
-        The key of the dictionary is enumerated player_n.
-        """
-        players = dict()
-        for n in range(n_players):
-            player_id = 'player_'+str(n)
-            players[player_id] = Player(n_dices_per_player)
-            players[player_id].player_id = player_id
-        return players
+    def get_player_names(self,players):
+        """Asks for the names of all players."""
+        for player in players.values():
+            player.name = input('Enter the name of the player: ')
+            player.participates = True
 
     def check_bullshit(self,players,guesser):
         """Check if estimate of a player is bullshit.
@@ -120,9 +114,9 @@ class Player:
 
     def correct_guess(self,previous_player):
         if self.guess_dice_number > previous_player.guess_dice_number:
-            True
+            return True
         if self.guess_dice_count > previous_player.guess_dice_count:
-            True
+            return True
         else:
             valid_decision = False
             while valid_decision is False:
@@ -200,6 +194,7 @@ class Round:
             self.moves = 0
             self.running = None
             self.player_order = []
+            self.dices_in_round = 0
 
         def get_previous_player(self,current_player):
             # gets previous player used to check guess and substract dice
