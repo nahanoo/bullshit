@@ -3,11 +3,17 @@ from bullshit import Player
 from bullshit import Round
 from bullshit import Interface
 
-def get_player_names(players):
-    """Asks for the names of all players."""
-    for player in players.values():
-        player.name = input('Enter the name of the player: ')
-        player.participates = True
+def create_players(n_players,n_dices_per_player):
+        """A function of the game to create and return
+        a dictionary of the Player class.
+        The key of the dictionary is enumerated player_n.
+        """
+        players = dict()
+        for n in range(n_players):
+            player_id = 'player_'+str(n)
+            players[player_id] = Player(n_dices_per_player)
+            players[player_id].player_id = player_id
+        return players
 
 def main(n_players,n_dices_per_person):
     """Creates and starts the game. Implements game logic of multiplayer mode.
@@ -16,9 +22,9 @@ def main(n_players,n_dices_per_person):
     game = Bullshit()
     game.running = True
     # returns dictionary of players. Dictionary key is enumerated player_n.
-    players = game.create_players(n_players,n_dices_per_person)
+    players = create_players(n_players,n_dices_per_person)
     game.active_players = n_players
-    get_player_names(players)
+    game.get_player_names(players)
     while game.running is True:
         game_round = Round()
         # creates game round which is used mainly to keep track of player order.
