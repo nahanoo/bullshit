@@ -1,7 +1,6 @@
 import random
-from bullshit import Interface
 import pkg_resources
-
+from bullshit import Interface
 
 class Bullshit:
     """This class is used to control the game status."""
