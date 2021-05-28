@@ -13,7 +13,6 @@ for i in range(1,10):
     for d,p in enumerate(pmf):
         if p >= 0.2:
             estimate = d
-    print(estimate)
     plt.plot(estimate,pmf[estimate],'ro')
     plt.show()
 
