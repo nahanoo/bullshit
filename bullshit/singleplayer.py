@@ -1,8 +1,8 @@
-from bullshit import Bullshit
-from bullshit import Player
-from bullshit import Bot
-from bullshit import Round
-from bullshit import Interface
+from .bullshit import Bullshit
+from .bullshit import Player
+from .bot import Bot
+from .bullshit import Round
+from .interface import Interface
 
 def create_bots(n_bots,n_dices_per_player):
     """A function of the game to create and return
@@ -16,21 +16,25 @@ def create_bots(n_bots,n_dices_per_player):
         bots[player_id].player_id = player_id
     return bots
 
-def main(n_bots,n_dices_per_person):
+def main(n_bots,n_dices_per_player):
     """Creates and starts the game. Implements game logic of multiplayer mode.
     Players as a dictionary of Player calsses are passed to game relevant functions.
     """
     game = Bullshit()
     game.running = True
     # returns dictionary of players. Dictionary key is enumerated player_n.
-    bots = create_bots(n_bots,n_dices_per_person)
-    player = Player(n_dices_per_person)
-
-    player = game.get_player_names()
-    game.active_players = n_bots+1
     players = dict()
+    player_id = 'player_0'
+    players[player_id] = Player(n_dices_per_player)
+    players[player_id].player_id = player_id
+    game.get_player_names(players)
+    for n in range(1,n_bots+1):
+        player_id = 'player_'+str(n)
+        players[player_id] = Bot(n_dices_per_player)
+        players[player_id].player_id = player_id
+
+    game.active_players = n_bots+1
     
-    get_player_names(players)
     while game.running is True:
         game_round = Round()
         # creates game round which is used mainly to keep track of player order.
@@ -44,14 +48,18 @@ def main(n_bots,n_dices_per_person):
         while game_round.running:
             for key,player in players.items():
                 if (player.participates and game_round.running):
-                    print('Player '+player.name+':')
-                    # this function asks the player to decide if to guess or to bullshit
-                    looser = player.make_game_move(game,game_round,players)
-                    if looser:
-                        # if bullshit is called ther has to be a looser
-                        # if guess is taken looser is None
-                        game_round.running = False
-                    game_round.moves += 1
+                    if player.bot is False:
+                        print('Player '+player.name+':')
+                        # this function asks the player to decide if to guess or to bullshit
+                        looser = player.make_game_move(game,game_round,players)
+                        if looser:
+                            # if bullshit is called ther has to be a looser
+                            # if guess is taken looser is None
+                            game_round.running = False
+                        game_round.moves += 1
+                    else:
+                        print('Player '+player.name+':')
+                        looser = player.make_game_move(game,game_round,players)
         if game.active_players == 1:
             # this checks if the round has been won
             for player in players.values():
