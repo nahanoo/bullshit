@@ -7,7 +7,6 @@ class Bullshit:
     def __init__(self):
         self.running = False
         self.active_players = 0
-        self.bot = False
 
     def get_player_names(self,players):
         """Asks for the names of all players."""
@@ -57,6 +56,9 @@ class Player:
         
         # this flag is used to check participation status in game
         self.participates = True
+
+        # flag if player is bot
+        self.bot = False
 
         self.name = None
         self.player_id = None
@@ -193,7 +195,6 @@ class Round:
             self.moves = 0
             self.running = None
             self.player_order = []
-            self.dices_in_round = 0
 
         def get_previous_player(self,current_player):
             # gets previous player used to check guess and substract dice
