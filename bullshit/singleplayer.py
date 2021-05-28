@@ -4,6 +4,7 @@ from .bot import Bot
 from .bullshit import Round
 from .interface import Interface
 
+
 def create_bots(n_bots,n_dices_per_player):
     """A function of the game to create and return
     a dictionary of the Player class.
@@ -34,8 +35,12 @@ def main(n_bots,n_dices_per_player):
         players[player_id].player_id = player_id
 
     game.active_players = n_bots+1
-    
     while game.running is True:
+        dices_in_round = 0
+        for player in players.values():
+            if player.participates:
+                dices_in_round += len(player.dices)
+        print('\nThis is a new round of bullshit!\nThere are',dices_in_round,'dices in this round.')
         game_round = Round()
         # creates game round which is used mainly to keep track of player order.
         game_round.running = True
@@ -49,7 +54,7 @@ def main(n_bots,n_dices_per_player):
             for key,player in players.items():
                 if (player.participates and game_round.running):
                     if player.bot is False:
-                        print('Player '+player.name+':')
+                        print('\nPlayer',player.name,"it's your turn.")
                         # this function asks the player to decide if to guess or to bullshit
                         looser = player.make_game_move(game,game_round,players)
                         if looser:
@@ -58,8 +63,12 @@ def main(n_bots,n_dices_per_player):
                             game_round.running = False
                         game_round.moves += 1
                     else:
-                        print('Player '+player.name+':')
+                        print('\nPlayer',player.name,'is playing and has',len(player.dices),'dice(s).')
+                        player.timer()
                         looser = player.make_game_move(game,game_round,players)
+                        if looser:
+                            game_round.running = False
+                        game_round.moves += 1
         if game.active_players == 1:
             # this checks if the round has been won
             for player in players.values():

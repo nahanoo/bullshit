@@ -5,12 +5,23 @@ import random
 import scipy
 import scipy.stats
 import statsmodels.stats.proportion
+import time
+import sys
 
 class Bot(Player):
     def __init__(self,n_dices_per_player):
         super().__init__(n_dices_per_player)
         self.bot = True
         self.name = names.get_full_name()
+
+    def timer(self):
+        for ticker in range(2):
+            blah="\|/-\|/-"
+            for l in blah:
+                sys.stdout.write(l)
+                sys.stdout.flush()
+                sys.stdout.write('\b')
+                time.sleep(0.2)
 
     def get_most_frequent_dice_number(self):
         dice_counts = dict()
@@ -39,21 +50,26 @@ class Bot(Player):
         for d,p in enumerate(pmf):
             if p >= 0.2:
                 confident_count_estimate = d
-        return confident_count_estimate
+        if confident_count_estimate == 0:
+            return 1
+        else:
+            return confident_count_estimate
 
     def make_game_move(self,game,game_round,players):
         bluff = random.choice(3*[False]+[True])
         if game_round.moves == 0:
             if not bluff:
                 self.guess_dice_number = self.get_most_frequent_dice_number()
-                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(players)))
+                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(players)+1))
             if bluff:
                 self.guess_dice_number = random.randint(1,6)
-                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(players)))
+                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(players)+1))
+            print('Player',self.name,'guessed',self.guess_dice_count,str(self.guess_dice_number)+'s.')
         else:
             previous_player = game_round.get_previous_player(self.player_id)
             if players[previous_player].guess_dice_count > self.get_max_confident_count(players):
                 bullshit = game.check_bullshit(players,players[previous_player])
+                print(self.name,'called bullshit.')
                 if not bullshit:
                     print('Ha! No bullshit - the guess was correct.')
                     # player looses a dice
@@ -66,7 +82,7 @@ class Bot(Player):
                     # retunrs player id of the looser
                     return self.player_id
                 if bullshit:
-                    print('Correct! Do not trust your friends, it was bullshit.')
+                    print('Correct! Do not trust your bots, it was bullshit.')
                     # previous player looses dice because of wrong guess
                     players[previous_player].dices.popitem()
                     if len(players[previous_player].dices) == 0:
@@ -83,5 +99,5 @@ class Bot(Player):
                     self.guess_dice_number = random.randint(1,6)
                     self.guess_dice_count = players[previous_player].guess_dice_count + 1
 
-                print('Player ',self.name,' guessed ',self.guess_dice_count,' ',self.guess_dice_number,'s.\n')
+                print('Player',self.name,'guessed',self.guess_dice_count,str(self.guess_dice_number)+'s.')
 
