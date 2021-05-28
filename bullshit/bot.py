@@ -1,5 +1,5 @@
-from bullshit import Bullshit
-from bullshit import Player
+from .bullshit import Bullshit
+from .bullshit import Player
 import names
 import random
 import scipy
@@ -9,6 +9,8 @@ import statsmodels.stats.proportion
 class Bot(Player):
     def __init__(self,n_dices_per_player):
         super().__init__(n_dices_per_player)
+        self.bot = True
+        self.name = names.get_full_name()
 
     def get_most_frequent_dice_number(self):
         dice_counts = dict()
@@ -27,21 +29,59 @@ class Bot(Player):
                     dice_counts[dice_number] = 1
         return max(dice_counts,key=dice_counts.get)
     
-    def get_max_confident_count(dices_in_round):
-        x = scipy.linspace(0,i,i+1)
-        pmf = scipy.stats.binom.pmf(x,i,1/3)
+    def get_max_confident_count(self,players):
+        dices_in_round = 0
+        for player in players.values():
+            if player.participates:
+                dices_in_round += len(player.dices)
+        x = scipy.linspace(0,dices_in_round,dices_in_round+1)
+        pmf = scipy.stats.binom.pmf(x,dices_in_round,1/3)
         for d,p in enumerate(pmf):
             if p >= 0.2:
                 confident_count_estimate = d
         return confident_count_estimate
 
-    def make_game_move(self,game_round):
+    def make_game_move(self,game,game_round,players):
         bluff = random.choice(3*[False]+[True])
         if game_round.moves == 0:
             if not bluff:
                 self.guess_dice_number = self.get_most_frequent_dice_number()
-                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(game_round.dices_in_round)))
+                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(players)))
             if bluff:
                 self.guess_dice_number = random.randint(1,6)
-                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(game_round.dices_in_round)))
+                self.guess_dice_count = random.choice(range(1,self.get_max_confident_count(players)))
+        else:
+            previous_player = game_round.get_previous_player(self.player_id)
+            if players[previous_player].guess_dice_count > self.get_max_confident_count(players):
+                bullshit = game.check_bullshit(players,players[previous_player])
+                if not bullshit:
+                    print('Ha! No bullshit - the guess was correct.')
+                    # player looses a dice
+                    self.dices.popitem()
+                    if len(self.dices) == 0:
+                        # if no dices are left he is out of the game.
+                        self.participates = False
+                        game.active_players -= 1
+                        print('That was your last dice. You are out!')
+                    # retunrs player id of the looser
+                    return self.player_id
+                if bullshit:
+                    print('Correct! Do not trust your friends, it was bullshit.')
+                    # previous player looses dice because of wrong guess
+                    players[previous_player].dices.popitem()
+                    if len(players[previous_player].dices) == 0:
+                        # if it was last dice player is out of the gmae
+                        players[previous_player].participates = False
+                        game.active_players -= 1
+                        print('That was the last dice of '+players[previous_player].name+'. You are out!')
+                    return previous_player
+            else:
+                if not bluff:
+                    self.guess_dice_number = self.get_most_frequent_dice_number()
+                    self.guess_dice_count = players[previous_player].guess_dice_count + 1
+                if bluff:
+                    self.guess_dice_number = random.randint(1,6)
+                    self.guess_dice_count = players[previous_player].guess_dice_count + 1
+
+                print('Player ',self.name,' guessed ',self.guess_dice_count,' ',self.guess_dice_number,'s.\n')
 
