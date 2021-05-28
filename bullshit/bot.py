@@ -32,8 +32,8 @@ class Bot(Player):
         pmf = scipy.stats.binom.pmf(x,i,1/3)
         for d,p in enumerate(pmf):
             if p >= 0.2:
-                confident_estimate = d
-        return confident_estimate
+                confident_count_estimate = d
+        return confident_count_estimate
 
     def make_game_move(self,game_round):
         bluff = random.choice(3*[False]+[True])
