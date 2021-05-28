@@ -1,14 +1,12 @@
 import random
-from bullshit import Interface
 import pkg_resources
-
+from .interface import Interface
 
 class Bullshit:
     """This class is used to control the game status."""
     def __init__(self):
         self.running = False
         self.active_players = 0
-        self.bot = False
 
     def get_player_names(self,players):
         """Asks for the names of all players."""
@@ -59,6 +57,9 @@ class Player:
         # this flag is used to check participation status in game
         self.participates = True
 
+        # flag if player is bot
+        self.bot = False
+
         self.name = None
         self.player_id = None
         self.n_dices_per_player = n_dices_per_player
@@ -89,7 +90,7 @@ class Player:
         valid_dice_number = False
         # used to ensure that guesses are integers
         while valid_dice_number is False:
-            dice_number = input('Which dice number do you pick to make a guess?\n')
+            dice_number = input('Which dice number do you pick to make a guess? ')
             try:
                 # checks if guess is valid
                 int(dice_number)
@@ -103,7 +104,7 @@ class Player:
         # get dice count
         valid_dice_count = False
         while valid_dice_count is False:
-            dice_count = input('How many '+str(self.guess_dice_number)+'s do you estimate are in this round?\n')
+            dice_count = input('How many '+str(self.guess_dice_number)+'s do you estimate are in this round? ')
             try:
                 int(dice_count)
                 self.guess_dice_count = int(dice_count)
@@ -122,7 +123,7 @@ class Player:
             while valid_decision is False:
                 print('This was not a valid guess. Previous player guessed '+
                 str(previous_player.guess_dice_count)+' '+str(previous_player.guess_dice_number)+'s.')
-                move = input('Press r to show rules, g to make a guess.\n')
+                move = input('Press r to show rules, g to make a guess. ')
                 if move == 'r':
                     with open(pkg_resources.resource_filename('bullshit','rules.txt'),'r') as handle:
                         rules = handle.read()

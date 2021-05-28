@@ -1,7 +1,7 @@
-from bullshit import Bullshit
-from bullshit import Player
-from bullshit import Round
-from bullshit import Interface
+from .bullshit import Bullshit
+from .bullshit import Player
+from .bullshit import Round
+from .bullshit import Interface
 
 def create_players(n_players,n_dices_per_player):
         """A function of the game to create and return
